@@ -2,6 +2,8 @@
 import { useState, useEffect, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 import { Map, MapControls , type MapRef} from "@/components/ui/map";
+import Image from "next/image";
+import carIcon from "@/pictures/icons8-car-96.png";
 //import { Card } from "../../components/ui/map";
 
 const styles = {
@@ -16,6 +18,7 @@ export default function HomePage() {
     const [style, setStyle] = useState<StyleKey>("default");
     const selectedStyle = styles[style];
     const is3D = style === "openstreetmap3d";
+    const [isisExpanded , setIsisExpanded] = useState(false);
 
     useEffect(() => {
         mapRef.current?.easeTo({ pitch: is3D ? 60 : 0, duration: 500 });
@@ -85,7 +88,50 @@ export default function HomePage() {
                         }}
                     />
                 </div>
-
+                <div style={{
+                    position: "absolute",
+                    bottom: "1rem",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    zIndex: 10,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "8px",
+                    width: isisExpanded? "600px" : "150px",
+                    height: isisExpanded? "400px" : "40px",
+                    transition: "width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                    padding: "10px 14px",
+                    borderRadius: "12px",
+                    border: "1px solid rgba(255, 255, 255, 0.65)",
+                    background: "rgba(255, 255, 255, 0.82)",
+                    backdropFilter: "blur(20px) saturate(180%)",
+                    WebkitBackdropFilter: "blur(20px) saturate(180%)",
+                    boxShadow: "0 10px 30px -12px rgba(0, 0, 0, 0.45)",
+                }}>
+                    <button
+                        type="button"
+                        onClick={() => setIsisExpanded(!isisExpanded)}
+                        aria-label={isisExpanded ? "Collapse panel" : "Expand panel"}
+                        style={{
+                            position: "absolute",
+                            ...(isisExpanded ? { top: "1rem", right: "1rem" } : {}),
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: "28px",
+                            height: "28px",
+                            border: "none",
+                            borderRadius: "8px",
+                            ...(isisExpanded? {background: "rgba(118, 118, 128, 0.12)"}:{}),
+                            color: "#1c1c1e",
+                            fontSize: "16px",
+                            lineHeight: 1,
+                            cursor: "pointer",
+                        }}>
+                        {isisExpanded ? "×" : <Image src={carIcon} alt="Car" width={38} height={38} />}
+                    </button>
+                </div>
                 <div style={{ position: "absolute", top: "1rem", right: "1rem", zIndex: 10 }}>
                     <select
                         value={style}
