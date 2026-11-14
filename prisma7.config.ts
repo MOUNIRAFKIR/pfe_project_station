@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { defineConfig } from "prisma/config";
 
 export default defineConfig({
@@ -7,6 +8,6 @@ export default defineConfig({
     seed: "npx tsx prisma/seed.ts"
   },
   datasource: {
-    url: "postgresql://postgres:123456@localhost:5432/pfe_db?schema=public",
+    url: process.env.DATABASE_URL,
   },
 });

@@ -52,13 +52,9 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
-  Follows: 'Follows',
-  Post: 'Post',
-  Comment: 'Comment',
-  Like: 'Like',
-  Conversation: 'Conversation',
-  Message: 'Message',
-  Notification: 'Notification'
+  Parking: 'Parking',
+  Spot: 'Spot',
+  Reservation: 'Reservation'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -84,90 +80,47 @@ export const UserScalarFieldEnum = {
   password: 'password',
   bio: 'bio',
   image: 'image',
+  role: 'role',
   createdAt: 'createdAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-export const FollowsScalarFieldEnum = {
-  followerId: 'followerId',
-  followingId: 'followingId',
-  createdAt: 'createdAt'
+export const ParkingScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  address: 'address',
+  totalSpots: 'totalSpots',
+  pricePerHour: 'pricePerHour',
+  latitude: 'latitude',
+  longitude: 'longitude'
 } as const
 
-export type FollowsScalarFieldEnum = (typeof FollowsScalarFieldEnum)[keyof typeof FollowsScalarFieldEnum]
+export type ParkingScalarFieldEnum = (typeof ParkingScalarFieldEnum)[keyof typeof ParkingScalarFieldEnum]
 
 
-export const PostScalarFieldEnum = {
+export const SpotScalarFieldEnum = {
   id: 'id',
-  imageUrl: 'imageUrl',
-  caption: 'caption',
+  spotNumber: 'spotNumber',
+  isBooked: 'isBooked',
+  parkingId: 'parkingId'
+} as const
+
+export type SpotScalarFieldEnum = (typeof SpotScalarFieldEnum)[keyof typeof SpotScalarFieldEnum]
+
+
+export const ReservationScalarFieldEnum = {
+  id: 'id',
   userId: 'userId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  parkingId: 'parkingId',
+  spotId: 'spotId',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  status: 'status'
 } as const
 
-export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
-
-
-export const CommentScalarFieldEnum = {
-  id: 'id',
-  content: 'content',
-  userId: 'userId',
-  postId: 'postId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
-
-
-export const LikeScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  userId: 'userId',
-  postId: 'postId'
-} as const
-
-export type LikeScalarFieldEnum = (typeof LikeScalarFieldEnum)[keyof typeof LikeScalarFieldEnum]
-
-
-export const ConversationScalarFieldEnum = {
-  id: 'id',
-  userOneId: 'userOneId',
-  userTwoId: 'userTwoId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ConversationScalarFieldEnum = (typeof ConversationScalarFieldEnum)[keyof typeof ConversationScalarFieldEnum]
-
-
-export const MessageScalarFieldEnum = {
-  id: 'id',
-  text: 'text',
-  read: 'read',
-  senderId: 'senderId',
-  conversationId: 'conversationId',
-  createdAt: 'createdAt'
-} as const
-
-export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
-
-
-export const NotificationScalarFieldEnum = {
-  id: 'id',
-  type: 'type',
-  read: 'read',
-  createdAt: 'createdAt',
-  userId: 'userId',
-  issuerId: 'issuerId',
-  postId: 'postId',
-  messageId: 'messageId'
-} as const
-
-export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+export type ReservationScalarFieldEnum = (typeof ReservationScalarFieldEnum)[keyof typeof ReservationScalarFieldEnum]
 
 
 export const SortOrder = {

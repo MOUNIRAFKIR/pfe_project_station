@@ -9,11 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User'
-export type * from './models/Follows'
-export type * from './models/Post'
-export type * from './models/Comment'
-export type * from './models/Like'
-export type * from './models/Conversation'
-export type * from './models/Message'
-export type * from './models/Notification'
+export type * from './models/Parking'
+export type * from './models/Spot'
+export type * from './models/Reservation'
 export type * from './commonInputTypes'

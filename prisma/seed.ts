@@ -1,10 +1,12 @@
 
+import "dotenv/config";
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '../app/generated/prisma';
+import { PrismaClient } from '../generated/prisma/client';
 
 // 1. Configurer le pool de connexion avec la base de données
-const connectionString = "postgresql://postgres:123456@localhost:5432/pfe_db";
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) throw new Error("DATABASE_URL is not set");
 const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 

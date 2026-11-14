@@ -47,37 +47,17 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
- * Model Follows
+ * Model Parking
  * 
  */
-export type Follows = Prisma.FollowsModel
+export type Parking = Prisma.ParkingModel
 /**
- * Model Post
+ * Model Spot
  * 
  */
-export type Post = Prisma.PostModel
+export type Spot = Prisma.SpotModel
 /**
- * Model Comment
+ * Model Reservation
  * 
  */
-export type Comment = Prisma.CommentModel
-/**
- * Model Like
- * 
- */
-export type Like = Prisma.LikeModel
-/**
- * Model Conversation
- * 
- */
-export type Conversation = Prisma.ConversationModel
-/**
- * Model Message
- * 
- */
-export type Message = Prisma.MessageModel
-/**
- * Model Notification
- * 
- */
-export type Notification = Prisma.NotificationModel
+export type Reservation = Prisma.ReservationModel

@@ -2,23 +2,36 @@
 
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
-import { SignJWT } from "jose";
-import { jwtVerify } from "jose";
+import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import "dotenv/config";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
 
 
-const secretString = process.env.JWT_SECRET || "fallback_emergency_secret_key_32_chars_long";
-const SECRET_KEY = new TextEncoder().encode(secretString);
+let cachedSecret: Uint8Array | null = null;
+function getSecretKey() {
+    if (cachedSecret) return cachedSecret;
+
+    const secretString = process.env.JWT_SECRET;
+    if (!secretString) {
+        if (process.env.NODE_ENV === "production") {
+            throw new Error("JWT_SECRET is not set");
+        }
+        console.warn("JWT_SECRET is not set; using an insecure development secret.");
+        cachedSecret = new TextEncoder().encode("dev_only_insecure_secret_change_me");
+    } else {
+        cachedSecret = new TextEncoder().encode(secretString);
+    }
+
+    return cachedSecret;
+}
 
 export async function signUp(formData: FormData) {
-    const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+    const name = String(formData.get("name") ?? "").trim();
+    const email = String(formData.get("email") ?? "").trim().toLowerCase();
+    const password = String(formData.get("password") ?? "");
 
     if (!name || !email || !password) return { error: "All fields are required" };
+    if (password.length < 6) return { error: "Password must be at least 6 characters" };
 
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) return { error: "User already exists" };
@@ -33,8 +46,8 @@ export async function signUp(formData: FormData) {
 }
 
 export async function login(formData: FormData) {
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+    const email = String(formData.get("email") ?? "").trim().toLowerCase();
+    const password = String(formData.get("password") ?? "");
 
     if (!email || !password) return { error: "All fields are required" };
 
@@ -48,7 +61,7 @@ export async function login(formData: FormData) {
         .setProtectedHeader({ alg: "HS256" })
         .setIssuedAt()
         .setExpirationTime("1d")
-        .sign(SECRET_KEY);
+        .sign(getSecretKey());
 
     const cookieStore = await cookies();
     cookieStore.set("session", token, {
@@ -77,7 +90,7 @@ export async function getAuthUserId(): Promise<string> {
             return "";
         }
 
-        const { payload } = await jwtVerify(sessionToken, SECRET_KEY);
+        const { payload } = await jwtVerify(sessionToken, getSecretKey());
 
         return (payload.userId as string) || "";
     } catch (error) {
@@ -86,3 +99,21 @@ export async function getAuthUserId(): Promise<string> {
     }
 }
 
+export async function GetLocalisation() {
+    const parkings = await prisma.parking.findMany({
+        where: {
+                latitude: { not: null },
+                longitude: { not: null }
+        },orderBy: { name: "asc" },
+            select: {
+                        id: true,
+                        name: true,
+                        address: true,
+                        totalSpots: true,
+                        pricePerHour: true,
+                        latitude: true,
+                        longitude: true
+            },
+        });
+    return parkings;
+}

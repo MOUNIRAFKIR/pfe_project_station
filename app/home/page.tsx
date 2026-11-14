@@ -1,9 +1,10 @@
 'use client'
 import { useState, useEffect, useRef } from "react";
-import "leaflet/dist/leaflet.css";
-import { Map, MapControls , type MapRef} from "@/components/ui/map";
+import { Map, MapControls,MapMarker,MarkerContent,MarkerPopup, type MapRef} from "@/components/ui/map";
 import Image from "next/image";
+import { Navigation } from "lucide-react";
 import carIcon from "@/pictures/icons8-car-96.png";
+import {GetLocalisation} from "../actions/auth"
 //import { Card } from "../../components/ui/map";
 
 const styles = {
@@ -13,12 +14,28 @@ const styles = {
 };
 type StyleKey = keyof typeof styles;
 
+type Parking = {
+    id: string;
+    name: string;
+    address: string;
+    totalSpots: number;
+    pricePerHour: number;
+    latitude: number | null;
+    longitude: number | null;
+};
+
 export default function HomePage() {
     const mapRef = useRef<MapRef>(null);
     const [style, setStyle] = useState<StyleKey>("default");
     const selectedStyle = styles[style];
     const is3D = style === "openstreetmap3d";
     const [isisExpanded , setIsisExpanded] = useState(false);
+    const [parkings, setParkings] = useState<Parking[]>([]);
+    useEffect(() => {
+        GetLocalisation()
+            .then(setParkings)
+            .catch((err) => console.error("Failed to load parkings", err));
+    }, []);
 
     useEffect(() => {
         mapRef.current?.easeTo({ pitch: is3D ? 60 : 0, duration: 500 });
@@ -42,6 +59,41 @@ export default function HomePage() {
                         showLocate
                         showFullscreen
                     />
+                    {parkings.map((p) => p.latitude !== null && p.longitude !== null ? (
+                        <MapMarker key={p.id} longitude={p.longitude} latitude={p.latitude}>
+                            <MarkerContent>
+                                <div style={{
+                                        width: "20px",
+                                        height: "20px",
+                                        cursor: "pointer",
+                                        borderRadius: "9999px",
+                                        border: "2px solid #ffffff",
+                                        background: "#ff6600",
+                                        boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)",
+                                        transition: "transform 150ms ease",
+                                    }}
+                                    onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.1)"; }}
+                                    onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
+                                />
+                            </MarkerContent>
+                            <MarkerPopup className="w-62 p-0" closeButton>
+                                <div style={{ display: "flex", flexDirection: "column", gap: "8px", padding: "12px" }}>
+                                    <p style={{ margin: 0, color: "var(--color-muted-foreground)", fontSize: "11px", fontWeight: 500, textTransform: "uppercase" }}>Parking</p>
+                                    <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 600 }}>{p.name}</h3>
+                                    <p style={{ margin: 0, color: "var(--color-muted-foreground)", fontSize: "14px" }}>{p.address}</p>
+                                    <div style={{ display: "flex", gap: "12px", fontSize: "14px" }}>
+                                        <span style={{ fontWeight: 500 }}>{p.totalSpots} places</span>
+                                        <span style={{ color: "var(--color-muted-foreground)" }}>{p.pricePerHour} DH/h</span>
+                                    </div>
+                                    <a href={`https://www.google.com/maps/dir/?api=1&destination=${p.latitude},${p.longitude}`}
+                                       target="_blank" rel="noopener noreferrer"
+                                       style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", borderRadius: "6px", padding: "6px 12px", fontSize: "14px", fontWeight: 500, background: "var(--color-primary)", color: "var(--color-primary-foreground)", textDecoration: "none" }}>
+                                        <Navigation style={{ width: "14px", height: "14px" }} /> Directions
+                                    </a>
+                                </div>
+                            </MarkerPopup>
+                        </MapMarker>
+                    ) : null)}
                 </Map>
                 <div style={{
                         position: "absolute",
