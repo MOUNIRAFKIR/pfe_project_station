@@ -31,6 +31,11 @@ export default function HomePage() {
     const is3D = style === "openstreetmap3d";
     const [isisExpanded , setIsisExpanded] = useState(false);
     const [parkings, setParkings] = useState<Parking[]>([]);
+    const [selectedParking,setSelectedParking] = useState<(typeof parkings)[number] | null>(null);
+
+    const handleselectedParking = (parking: (typeof parkings)[number]) => {
+        setSelectedParking(parking);
+    }
     useEffect(() => {
         GetLocalisation()
             .then(setParkings)
@@ -74,6 +79,10 @@ export default function HomePage() {
                                     }}
                                     onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.1)"; }}
                                     onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
+                                    onClick={()=>{
+                                        setIsisExpanded(true)
+                                        handleselectedParking(p);
+                                    }}
                                 />
                             </MarkerContent>
                             <MarkerPopup className="w-62 p-0" closeButton>
@@ -95,6 +104,7 @@ export default function HomePage() {
                         </MapMarker>
                     ) : null)}
                 </Map>
+
                 <div style={{
                         position: "absolute",
                         top: "1rem",
@@ -163,7 +173,11 @@ export default function HomePage() {
                 }}>
                     <button
                         type="button"
-                        onClick={() => setIsisExpanded(!isisExpanded)}
+                        onClick={() => {
+                                setIsisExpanded(!isisExpanded);
+                                setSelectedParking(null);
+                            }
+                        }
                         aria-label={isisExpanded ? "Collapse panel" : "Expand panel"}
                         style={{
                             position: "absolute",
@@ -183,6 +197,29 @@ export default function HomePage() {
                         }}>
                         {isisExpanded ? "×" : <Image src={carIcon} alt="Car" width={38} height={38} />}
                     </button>
+                    {isisExpanded && (
+                        <div>
+
+                        {selectedParking &&(
+                            <div>
+                                <div style={{ display: "flex", flexDirection: "column", gap: "8px", padding: "12px" ,width:"95vh"}}>
+                                    <p style={{ margin: 0, color: "var(--color-muted-foreground)", fontSize: "11px", fontWeight: 500, textTransform: "uppercase" }}>Parking</p>
+                                    <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 600 }}>{selectedParking.name}</h3>
+                                    <p style={{ margin: 0, color: "var(--color-muted-foreground)", fontSize: "14px" }}>{selectedParking.address}</p>
+                                    <div style={{ display: "flex", gap: "12px", fontSize: "14px" }}>
+                                        <span style={{ fontWeight: 500 }}>{selectedParking.totalSpots} places</span>
+                                        <span style={{ color: "var(--color-muted-foreground)" }}>{selectedParking.pricePerHour} DH/h</span>
+                                    </div>
+                                    <a href={`https://www.google.com/maps/dir/?api=1&destination=${selectedParking.latitude},${selectedParking.longitude}`}
+                                       target="_blank" rel="noopener noreferrer"
+                                       style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", borderRadius: "6px", padding: "6px 12px", fontSize: "14px", fontWeight: 500, background: "var(--color-primary)", color: "var(--color-primary-foreground)", textDecoration: "none" }}>
+                                        <Navigation style={{ width: "14px", height: "14px" }} /> Directions
+                                    </a>
+                                </div>
+                            </div>
+                        )}
+                        </div>
+                    )}
                 </div>
                 <div style={{ position: "absolute", top: "1rem", right: "1rem", zIndex: 10 }}>
                     <select
