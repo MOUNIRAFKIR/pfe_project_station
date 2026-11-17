@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { Map, MapControls,MapMarker,MarkerContent,MarkerPopup, type MapRef} from "@/components/ui/map";
 import Image from "next/image";
 import { Navigation } from "lucide-react";
+import { MapPin } from "lucide-react";
 import carIcon from "@/pictures/icons8-car-96.png";
 import {GetLocalisation} from "../actions/auth"
 //import { Card } from "../../components/ui/map";
@@ -85,20 +86,12 @@ export default function HomePage() {
                                     }}
                                 />
                             </MarkerContent>
-                            <MarkerPopup className="w-62 p-0" closeButton>
-                                <div style={{ display: "flex", flexDirection: "column", gap: "8px", padding: "12px" }}>
-                                    <p style={{ margin: 0, color: "var(--color-muted-foreground)", fontSize: "11px", fontWeight: 500, textTransform: "uppercase" }}>Parking</p>
-                                    <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 600 }}>{p.name}</h3>
-                                    <p style={{ margin: 0, color: "var(--color-muted-foreground)", fontSize: "14px" }}>{p.address}</p>
-                                    <div style={{ display: "flex", gap: "12px", fontSize: "14px" }}>
-                                        <span style={{ fontWeight: 500 }}>{p.totalSpots} places</span>
-                                        <span style={{ color: "var(--color-muted-foreground)" }}>{p.pricePerHour} DH/h</span>
-                                    </div>
-                                    <a href={`https://www.google.com/maps/dir/?api=1&destination=${p.latitude},${p.longitude}`}
-                                       target="_blank" rel="noopener noreferrer"
-                                       style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", borderRadius: "6px", padding: "6px 12px", fontSize: "14px", fontWeight: 500, background: "var(--color-primary)", color: "var(--color-primary-foreground)", textDecoration: "none" }}>
-                                        <Navigation style={{ width: "14px", height: "14px" }} /> Directions
-                                    </a>
+                            <MarkerPopup className="bg-transparent border-transparent p-0 shadow-none" anchor="center" offset={0}>
+                                <div className="cursor-move">
+                                    <MapPin
+                                        className="fill-red-700 stroke-white dark:fill-white"
+                                        size={38}
+                                    />
                                 </div>
                             </MarkerPopup>
                         </MapMarker>
@@ -156,15 +149,19 @@ export default function HomePage() {
                     left: "50%",
                     transform: "translateX(-50%)",
                     zIndex: 10,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
+                    ...(!isisExpanded && {
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }),
                     gap: "8px",
-                    width: isisExpanded? "600px" : "150px",
-                    height: isisExpanded? "400px" : "40px",
+                    width: isisExpanded ? "min(600px, calc(100% - 2rem))" : "150px",
+                    height: isisExpanded ? "min(400px, calc(100% - 2rem))" : "40px",
                     transition: "width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)",
                     padding: "10px 14px",
                     borderRadius: "12px",
+                    boxSizing: "border-box",
+                    overflow: "hidden",
                     border: "1px solid rgba(255, 255, 255, 0.65)",
                     background: "rgba(255, 255, 255, 0.82)",
                     backdropFilter: "blur(20px) saturate(180%)",
@@ -202,7 +199,7 @@ export default function HomePage() {
 
                         {selectedParking &&(
                             <div>
-                                <div style={{ display: "flex", flexDirection: "column", gap: "8px", padding: "12px" ,width:"95vh"}}>
+                                <div style={{ display: "flex", flexDirection: "column", gap: "8px", padding: "12px" }}>
                                     <p style={{ margin: 0, color: "var(--color-muted-foreground)", fontSize: "11px", fontWeight: 500, textTransform: "uppercase" }}>Parking</p>
                                     <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 600 }}>{selectedParking.name}</h3>
                                     <p style={{ margin: 0, color: "var(--color-muted-foreground)", fontSize: "14px" }}>{selectedParking.address}</p>
@@ -210,10 +207,12 @@ export default function HomePage() {
                                         <span style={{ fontWeight: 500 }}>{selectedParking.totalSpots} places</span>
                                         <span style={{ color: "var(--color-muted-foreground)" }}>{selectedParking.pricePerHour} DH/h</span>
                                     </div>
+                                </div>
+                                <div style={{position:"absolute", bottom: "1rem", right: "0rem", transform: "translateX(-50%)"}}>
                                     <a href={`https://www.google.com/maps/dir/?api=1&destination=${selectedParking.latitude},${selectedParking.longitude}`}
                                        target="_blank" rel="noopener noreferrer"
-                                       style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", borderRadius: "6px", padding: "6px 12px", fontSize: "14px", fontWeight: 500, background: "var(--color-primary)", color: "var(--color-primary-foreground)", textDecoration: "none" }}>
-                                        <Navigation style={{ width: "14px", height: "14px" }} /> Directions
+                                       style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", borderRadius: "80px", padding: "6px 12px", fontSize: "14px", fontWeight: 500, background: "#4285F4", color: "var(--color-primary-foreground)", textDecoration: "none" }}>
+                                        <Navigation style={{ width: "18px", height: "30px" }} />
                                     </a>
                                 </div>
                             </div>

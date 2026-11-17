@@ -2,58 +2,61 @@ generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
 }
+
 datasource db {
   provider = "postgresql"
 }
 
-// ---- LES MODELS DYAL E-PARKING ----
-
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String
-  bio       String?
-  image     String?
-  role      String   @default("USER") // USER wla ADMIN
-  createdAt DateTime @default(now())
+  id              String   @id @default(cuid())
+  name            String
+  email           String   @unique
+  password        String
+  bio             String?
+  image           String?
+  carRegistration String?  @unique
+  role            String   @default("USER") // USER wla ADMIN
+  createdAt       DateTime @default(now())
 
-  reservations Reservation[]
+  reservations      Reservation[] @relation("UserReservations")
+  reservationsByCar Reservation[] @relation("ReservationCarRegistration")
 }
 
 model Parking {
-  id          String   @id @default(cuid())
-  name        String
-  address     String
-  totalSpots  Int
+  id           String @id @default(cuid())
+  name         String
+  address      String
+  totalSpots   Int
   pricePerHour Float
-  latitude    Float?
-  longitude   Float?
-  
-  spots       Spot[]
+  latitude     Float?
+  longitude    Float?
+
+  spots        Spot[]
   reservations Reservation[]
 }
 
 model Spot {
-  id        String  @id @default(cuid())
+  id         String  @id @default(cuid())
   spotNumber String
-  isBooked  Boolean @default(false)
-  parkingId String
-  parking   Parking @relation(fields: [parkingId], references: [id])
+  isBooked   Boolean @default(false)
+  parkingId  String
+  parking    Parking @relation(fields: [parkingId], references: [id])
 
   reservations Reservation[]
 }
 
 model Reservation {
-  id        String   @id @default(cuid())
-  userId    String
-  parkingId String
-  spotId    String
-  startTime DateTime
-  endTime   DateTime
-  status    String   @default("PENDING") // PENDING, CONFIRMED, CANCELLED
+  id              String   @id @default(cuid())
+  userId          String
+  parkingId       String
+  spotId          String
+  carRegistration String?
+  startTime       DateTime
+  endTime         DateTime
+  status          String   @default("PENDING") // PENDING, CONFIRMED, CANCELLED
 
-  user    User    @relation(fields: [userId], references: [id])
-  parking Parking @relation(fields: [parkingId], references: [id])
-  spot    Spot    @relation(fields: [spotId], references: [id])
+  user                User    @relation("UserReservations", fields: [userId], references: [id])
+  carRegistrationUser User?   @relation("ReservationCarRegistration", fields: [carRegistration], references: [carRegistration])
+  parking             Parking @relation(fields: [parkingId], references: [id])
+  spot                Spot    @relation(fields: [spotId], references: [id])
 }

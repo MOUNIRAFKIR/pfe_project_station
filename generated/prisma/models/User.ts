@@ -31,6 +31,7 @@ export type UserMinAggregateOutputType = {
   password: string | null
   bio: string | null
   image: string | null
+  carRegistration: string | null
   role: string | null
   createdAt: Date | null
 }
@@ -42,6 +43,7 @@ export type UserMaxAggregateOutputType = {
   password: string | null
   bio: string | null
   image: string | null
+  carRegistration: string | null
   role: string | null
   createdAt: Date | null
 }
@@ -53,6 +55,7 @@ export type UserCountAggregateOutputType = {
   password: number
   bio: number
   image: number
+  carRegistration: number
   role: number
   createdAt: number
   _all: number
@@ -66,6 +69,7 @@ export type UserMinAggregateInputType = {
   password?: true
   bio?: true
   image?: true
+  carRegistration?: true
   role?: true
   createdAt?: true
 }
@@ -77,6 +81,7 @@ export type UserMaxAggregateInputType = {
   password?: true
   bio?: true
   image?: true
+  carRegistration?: true
   role?: true
   createdAt?: true
 }
@@ -88,6 +93,7 @@ export type UserCountAggregateInputType = {
   password?: true
   bio?: true
   image?: true
+  carRegistration?: true
   role?: true
   createdAt?: true
   _all?: true
@@ -172,6 +178,7 @@ export type UserGroupByOutputType = {
   password: string
   bio: string | null
   image: string | null
+  carRegistration: string | null
   role: string
   createdAt: Date
   _count: UserCountAggregateOutputType | null
@@ -204,9 +211,11 @@ export type UserWhereInput = {
   password?: Prisma.StringFilter<"User"> | string
   bio?: Prisma.StringNullableFilter<"User"> | string | null
   image?: Prisma.StringNullableFilter<"User"> | string | null
+  carRegistration?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.StringFilter<"User"> | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   reservations?: Prisma.ReservationListRelationFilter
+  reservationsByCar?: Prisma.ReservationListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -216,14 +225,17 @@ export type UserOrderByWithRelationInput = {
   password?: Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
+  carRegistration?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   reservations?: Prisma.ReservationOrderByRelationAggregateInput
+  reservationsByCar?: Prisma.ReservationOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   email?: string
+  carRegistration?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
@@ -234,7 +246,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   role?: Prisma.StringFilter<"User"> | string
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   reservations?: Prisma.ReservationListRelationFilter
-}, "id" | "email">
+  reservationsByCar?: Prisma.ReservationListRelationFilter
+}, "id" | "email" | "carRegistration">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -243,6 +256,7 @@ export type UserOrderByWithAggregationInput = {
   password?: Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
+  carRegistration?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -260,6 +274,7 @@ export type UserScalarWhereWithAggregatesInput = {
   password?: Prisma.StringWithAggregatesFilter<"User"> | string
   bio?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  carRegistration?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   role?: Prisma.StringWithAggregatesFilter<"User"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -271,9 +286,11 @@ export type UserCreateInput = {
   password: string
   bio?: string | null
   image?: string | null
+  carRegistration?: string | null
   role?: string
   createdAt?: Date | string
   reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
+  reservationsByCar?: Prisma.ReservationCreateNestedManyWithoutCarRegistrationUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -283,9 +300,11 @@ export type UserUncheckedCreateInput = {
   password: string
   bio?: string | null
   image?: string | null
+  carRegistration?: string | null
   role?: string
   createdAt?: Date | string
   reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
+  reservationsByCar?: Prisma.ReservationUncheckedCreateNestedManyWithoutCarRegistrationUserInput
 }
 
 export type UserUpdateInput = {
@@ -295,9 +314,11 @@ export type UserUpdateInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  carRegistration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
+  reservationsByCar?: Prisma.ReservationUpdateManyWithoutCarRegistrationUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -307,9 +328,11 @@ export type UserUncheckedUpdateInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  carRegistration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
+  reservationsByCar?: Prisma.ReservationUncheckedUpdateManyWithoutCarRegistrationUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -319,6 +342,7 @@ export type UserCreateManyInput = {
   password: string
   bio?: string | null
   image?: string | null
+  carRegistration?: string | null
   role?: string
   createdAt?: Date | string
 }
@@ -330,6 +354,7 @@ export type UserUpdateManyMutationInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  carRegistration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -341,6 +366,7 @@ export type UserUncheckedUpdateManyInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  carRegistration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -352,6 +378,7 @@ export type UserCountOrderByAggregateInput = {
   password?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  carRegistration?: Prisma.SortOrder
   role?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -363,6 +390,7 @@ export type UserMaxOrderByAggregateInput = {
   password?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  carRegistration?: Prisma.SortOrder
   role?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -374,6 +402,7 @@ export type UserMinOrderByAggregateInput = {
   password?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  carRegistration?: Prisma.SortOrder
   role?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -381,6 +410,11 @@ export type UserMinOrderByAggregateInput = {
 export type UserScalarRelationFilter = {
   is?: Prisma.UserWhereInput
   isNot?: Prisma.UserWhereInput
+}
+
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -401,12 +435,28 @@ export type UserCreateNestedOneWithoutReservationsInput = {
   connect?: Prisma.UserWhereUniqueInput
 }
 
+export type UserCreateNestedOneWithoutReservationsByCarInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReservationsByCarInput, Prisma.UserUncheckedCreateWithoutReservationsByCarInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReservationsByCarInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
 export type UserUpdateOneRequiredWithoutReservationsNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutReservationsInput, Prisma.UserUncheckedCreateWithoutReservationsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutReservationsInput
   upsert?: Prisma.UserUpsertWithoutReservationsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReservationsInput, Prisma.UserUpdateWithoutReservationsInput>, Prisma.UserUncheckedUpdateWithoutReservationsInput>
+}
+
+export type UserUpdateOneWithoutReservationsByCarNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReservationsByCarInput, Prisma.UserUncheckedCreateWithoutReservationsByCarInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReservationsByCarInput
+  upsert?: Prisma.UserUpsertWithoutReservationsByCarInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReservationsByCarInput, Prisma.UserUpdateWithoutReservationsByCarInput>, Prisma.UserUncheckedUpdateWithoutReservationsByCarInput>
 }
 
 export type UserCreateWithoutReservationsInput = {
@@ -416,8 +466,10 @@ export type UserCreateWithoutReservationsInput = {
   password: string
   bio?: string | null
   image?: string | null
+  carRegistration?: string | null
   role?: string
   createdAt?: Date | string
+  reservationsByCar?: Prisma.ReservationCreateNestedManyWithoutCarRegistrationUserInput
 }
 
 export type UserUncheckedCreateWithoutReservationsInput = {
@@ -427,13 +479,46 @@ export type UserUncheckedCreateWithoutReservationsInput = {
   password: string
   bio?: string | null
   image?: string | null
+  carRegistration?: string | null
   role?: string
   createdAt?: Date | string
+  reservationsByCar?: Prisma.ReservationUncheckedCreateNestedManyWithoutCarRegistrationUserInput
 }
 
 export type UserCreateOrConnectWithoutReservationsInput = {
   where: Prisma.UserWhereUniqueInput
   create: Prisma.XOR<Prisma.UserCreateWithoutReservationsInput, Prisma.UserUncheckedCreateWithoutReservationsInput>
+}
+
+export type UserCreateWithoutReservationsByCarInput = {
+  id?: string
+  name: string
+  email: string
+  password: string
+  bio?: string | null
+  image?: string | null
+  carRegistration?: string | null
+  role?: string
+  createdAt?: Date | string
+  reservations?: Prisma.ReservationCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutReservationsByCarInput = {
+  id?: string
+  name: string
+  email: string
+  password: string
+  bio?: string | null
+  image?: string | null
+  carRegistration?: string | null
+  role?: string
+  createdAt?: Date | string
+  reservations?: Prisma.ReservationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutReservationsByCarInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReservationsByCarInput, Prisma.UserUncheckedCreateWithoutReservationsByCarInput>
 }
 
 export type UserUpsertWithoutReservationsInput = {
@@ -454,8 +539,10 @@ export type UserUpdateWithoutReservationsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  carRegistration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reservationsByCar?: Prisma.ReservationUpdateManyWithoutCarRegistrationUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReservationsInput = {
@@ -465,8 +552,47 @@ export type UserUncheckedUpdateWithoutReservationsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  carRegistration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reservationsByCar?: Prisma.ReservationUncheckedUpdateManyWithoutCarRegistrationUserNestedInput
+}
+
+export type UserUpsertWithoutReservationsByCarInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReservationsByCarInput, Prisma.UserUncheckedUpdateWithoutReservationsByCarInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReservationsByCarInput, Prisma.UserUncheckedCreateWithoutReservationsByCarInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReservationsByCarInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReservationsByCarInput, Prisma.UserUncheckedUpdateWithoutReservationsByCarInput>
+}
+
+export type UserUpdateWithoutReservationsByCarInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  carRegistration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reservations?: Prisma.ReservationUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReservationsByCarInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  carRegistration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reservations?: Prisma.ReservationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -476,10 +602,12 @@ export type UserUncheckedUpdateWithoutReservationsInput = {
 
 export type UserCountOutputType = {
   reservations: number
+  reservationsByCar: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   reservations?: boolean | UserCountOutputTypeCountReservationsArgs
+  reservationsByCar?: boolean | UserCountOutputTypeCountReservationsByCarArgs
 }
 
 /**
@@ -499,6 +627,13 @@ export type UserCountOutputTypeCountReservationsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.ReservationWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReservationsByCarArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReservationWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -507,9 +642,11 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   password?: boolean
   bio?: boolean
   image?: boolean
+  carRegistration?: boolean
   role?: boolean
   createdAt?: boolean
   reservations?: boolean | Prisma.User$reservationsArgs<ExtArgs>
+  reservationsByCar?: boolean | Prisma.User$reservationsByCarArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -520,6 +657,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   password?: boolean
   bio?: boolean
   image?: boolean
+  carRegistration?: boolean
   role?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -531,6 +669,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   password?: boolean
   bio?: boolean
   image?: boolean
+  carRegistration?: boolean
   role?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -542,13 +681,15 @@ export type UserSelectScalar = {
   password?: boolean
   bio?: boolean
   image?: boolean
+  carRegistration?: boolean
   role?: boolean
   createdAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "bio" | "image" | "role" | "createdAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "bio" | "image" | "carRegistration" | "role" | "createdAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   reservations?: boolean | Prisma.User$reservationsArgs<ExtArgs>
+  reservationsByCar?: boolean | Prisma.User$reservationsByCarArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -558,6 +699,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "User"
   objects: {
     reservations: Prisma.$ReservationPayload<ExtArgs>[]
+    reservationsByCar: Prisma.$ReservationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -566,6 +708,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     password: string
     bio: string | null
     image: string | null
+    carRegistration: string | null
     role: string
     createdAt: Date
   }, ExtArgs["result"]["user"]>
@@ -963,6 +1106,7 @@ readonly fields: UserFieldRefs;
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   reservations<T extends Prisma.User$reservationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reservationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reservationsByCar<T extends Prisma.User$reservationsByCarArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reservationsByCarArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReservationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -998,6 +1142,7 @@ export interface UserFieldRefs {
   readonly password: Prisma.FieldRef<"User", 'String'>
   readonly bio: Prisma.FieldRef<"User", 'String'>
   readonly image: Prisma.FieldRef<"User", 'String'>
+  readonly carRegistration: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
 }
@@ -1396,6 +1541,30 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
  * User.reservations
  */
 export type User$reservationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Reservation
+   */
+  select?: Prisma.ReservationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Reservation
+   */
+  omit?: Prisma.ReservationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReservationInclude<ExtArgs> | null
+  where?: Prisma.ReservationWhereInput
+  orderBy?: Prisma.ReservationOrderByWithRelationInput | Prisma.ReservationOrderByWithRelationInput[]
+  cursor?: Prisma.ReservationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReservationScalarFieldEnum | Prisma.ReservationScalarFieldEnum[]
+}
+
+/**
+ * User.reservationsByCar
+ */
+export type User$reservationsByCarArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Reservation
    */

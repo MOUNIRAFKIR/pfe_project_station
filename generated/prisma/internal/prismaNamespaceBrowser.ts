@@ -80,6 +80,7 @@ export const UserScalarFieldEnum = {
   password: 'password',
   bio: 'bio',
   image: 'image',
+  carRegistration: 'carRegistration',
   role: 'role',
   createdAt: 'createdAt'
 } as const
@@ -115,6 +116,7 @@ export const ReservationScalarFieldEnum = {
   userId: 'userId',
   parkingId: 'parkingId',
   spotId: 'spotId',
+  carRegistration: 'carRegistration',
   startTime: 'startTime',
   endTime: 'endTime',
   status: 'status'
