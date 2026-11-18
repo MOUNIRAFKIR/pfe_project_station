@@ -4,6 +4,9 @@ import { Map, MapControls,MapMarker,MarkerContent,MarkerPopup, type MapRef} from
 import Image from "next/image";
 import { Navigation } from "lucide-react";
 import { MapPin } from "lucide-react";
+import { User } from "lucide-react";
+import { X, ChevronRight } from "lucide-react";
+import Link from "next/link";
 import carIcon from "@/pictures/icons8-car-96.png";
 import {GetLocalisation} from "../actions/auth"
 import ParkingMap from "../../components/ParkingMap";
@@ -31,7 +34,8 @@ export default function HomePage() {
     const [style, setStyle] = useState<StyleKey>("default");
     const selectedStyle = styles[style];
     const is3D = style === "openstreetmap3d";
-    const [isisExpanded , setIsisExpanded] = useState(false);
+    const [isExpanded , setisExpanded] = useState(false);
+    const [isProfileExpanded , setIsProfileExpanded] = useState(false);
     const [parkings, setParkings] = useState<Parking[]>([]);
     const [selectedParking,setSelectedParking] = useState<(typeof parkings)[number] | null>(null);
 
@@ -104,7 +108,8 @@ export default function HomePage() {
                                     onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.1)"; }}
                                     onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
                                     onClick={()=>{
-                                        setIsisExpanded(true)
+                                        setisExpanded(true);
+                                        setIsProfileExpanded(false);
                                         handleselectedParking(p);
                                     }}
                                 />
@@ -123,50 +128,118 @@ export default function HomePage() {
                     ) : null)}
                 </Map>
 
-                <div style={{
-                        position: "absolute",
-                        top: "1rem",
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                        zIndex: 10,
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                        width: "min(420px, calc(100% - 2rem))",
-                        padding: "10px 14px",
-                        borderRadius: "12px",
-                        border: "1px solid rgba(255, 255, 255, 0.65)",
-                        background: "rgba(255, 255, 255, 0.82)",
-                        backdropFilter: "blur(20px) saturate(180%)",
-                        WebkitBackdropFilter: "blur(20px) saturate(180%)",
-                        boxShadow: "0 10px 30px -12px rgba(0, 0, 0, 0.45)",
-                    }}>
-                    <svg width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#8e8e93"
-                        strokeWidth="2.2"
-                        strokeLinecap="round">
-                        <circle cx="11" cy="11" r="7" />
-                        <path d="M16.5 16.5 21 21" />
-                    </svg>
-                    <input
-                        type="search"
-                        //value={query}
-                        //onChange={(event) => setQuery(event.target.value)}
-                        placeholder="Search stations in Marrakech"
+                <div style={{position: "absolute", top: "1rem", left: "50%", transform: "translateX(-50%)", zIndex: 10, display: "flex", alignItems: "center", gap: "8px", width: "min(470px, calc(100% - 2rem))"}}>
+                    <div style={{display: "flex", alignItems: "center", gap: "8px", flex: 1, minWidth: 0, padding: "10px 14px", borderRadius: "12px", border: "1px solid rgba(255, 255, 255, 0.65)", background: "rgba(255, 255, 255, 0.82)", backdropFilter: "blur(20px) saturate(180%)", WebkitBackdropFilter: "blur(20px) saturate(180%)", boxShadow: "0 10px 30px -12px rgba(0, 0, 0, 0.45)",}}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8e8e93" strokeWidth="2.2" strokeLinecap="round">
+                            <circle cx="11" cy="11" r="7" />
+                            <path d="M16.5 16.5 21 21" />
+                        </svg>
+                        <input type="search"
+                            //value={query}
+                            //onChange={(event) => setQuery(event.target.value)}
+                            placeholder="Search stations in Marrakech"
+                            style={{flex: 1, minWidth: 0, border: "none", outline: "none", background: "transparent", fontSize: "16px", color: "#1c1c1e",
+                                //fontFamily: SF,
+                            }}
+                        />
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() => {
+                                setisExpanded(false);
+                                setIsProfileExpanded(!isProfileExpanded);
+                            }
+                        }
                         style={{
-                            flex: 1,
-                            minWidth: 0,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flexShrink: 0,
+                            width: "42px",
+                            height: "42px",
                             border: "none",
-                            outline: "none",
-                            background: "transparent",
-                            fontSize: "16px",
-                            color: "#1c1c1e",
-                            //fontFamily: SF,
+                            borderRadius: "9999px",
+                            background: "linear-gradient(135deg, #ff8a3d 0%, #ff6600 100%)",
+                            color: "#ffffff",
+                            cursor: "pointer",
+                            boxShadow: isProfileExpanded
+                                ? "0 0 0 3px rgba(255, 255, 255, 0.85), 0 10px 24px -10px rgba(255, 102, 0, 0.9)"
+                                : "0 10px 24px -10px rgba(255, 102, 0, 0.9)",
+                            transition: "transform 150ms ease, box-shadow 150ms ease",
                         }}
-                    />
+                        onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.06)"; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
+                    >
+                        <User style={{ width: "20px", height: "20px" }} />
+                    </button>
+                </div>
+                <div id="profile-panel"
+                     aria-hidden={!isProfileExpanded} style={{
+                    position: "absolute",
+                    top: "5rem",
+                    bottom: "1rem",
+                    right: "1rem",
+                    zIndex: 20,
+                    display: "flex",
+                    flexDirection: "column",
+                    width: "min(380px, calc(100% - 2rem))",
+                    borderRadius: "18px",
+                    border: "1px solid rgba(255, 255, 255, 0.65)",
+                    background: "rgba(255, 255, 255, 0.9)",
+                    backdropFilter: "blur(20px) saturate(180%)",
+                    WebkitBackdropFilter: "blur(20px) saturate(180%)",
+                    boxShadow: "0 24px 60px -24px rgba(0, 0, 0, 0.5)",
+                    overflow: "hidden",
+                    transform: isProfileExpanded ? "translateX(0)" : "translateX(calc(100% + 1.5rem))",
+                    opacity: isProfileExpanded ? 1 : 0,
+                    visibility: isProfileExpanded ? "visible" : "hidden",
+                    pointerEvents: isProfileExpanded ? "auto" : "none",
+                    transition: `transform 320ms cubic-bezier(0.32, 0.72, 0, 1), opacity 240ms ease, visibility 0s linear ${isProfileExpanded ? "0s" : "320ms"}`,
+                }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px", padding: "16px 16px 0" }}>
+                        <p style={{ margin: 0, fontSize: "11px", fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", color: "#8e8e93" }}>Profile</p>
+                        <button
+                            type="button"
+                            onClick={() => setIsProfileExpanded(false)}
+                            style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "28px", height: "28px", border: "none", borderRadius: "8px", background: "rgba(118, 118, 128, 0.12)", color: "#1c1c1e", cursor: "pointer" }}
+                        >
+                            <X style={{ width: "16px", height: "16px" }} />
+                        </button>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", padding: "8px 20px 20px", textAlign: "center" }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "76px", height: "76px", borderRadius: "9999px", background: "linear-gradient(135deg, #ff8a3d 0%, #ff6600 100%)", color: "#ffffff", boxShadow: "0 16px 32px -14px rgba(255, 102, 0, 0.95)" }}>
+                            <User style={{ width: "36px", height: "36px" }} />
+                        </div>
+                        <div>
+                            <h3 style={{ margin: 0, fontSize: "20px", fontWeight: 700, letterSpacing: "-0.02em", color: "#1c1c1e" }}>Your profile</h3>
+                            <p style={{ margin: "6px 0 0", fontSize: "13px", lineHeight: 1.4, color: "var(--color-muted-foreground)" }}>Manage your reservations and account settings.</p>
+                        </div>
+                    </div>
+                    <div style={{ padding: "0 12px" }}>
+                        <p style={{ margin: "0 6px 8px", fontSize: "11px", fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase", color: "#8e8e93" }}>Account</p>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                            {["My reservations", "Payment methods", "Settings"].map((label) => (
+                                <Link
+                                    key={label}
+                                    href="/profile"
+                                    style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px", padding: "12px", borderRadius: "12px", color: "#1c1c1e", fontSize: "14px", fontWeight: 500, textDecoration: "none", transition: "background 150ms ease" }}
+                                    onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(118, 118, 128, 0.08)"; }}
+                                    onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+                                >
+                                    {label}
+                                    <ChevronRight style={{ width: "16px", height: "16px", color: "#8e8e93" }} />
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                    <div style={{ marginTop: "auto", padding: "14px 18px 18px" }}>
+                        <Link
+                            href="/profile"
+                            style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "12px 16px", borderRadius: "12px", background: "#0a84ff", color: "#ffffff", fontSize: "14px", fontWeight: 600, textDecoration: "none", boxShadow: "0 10px 24px -10px rgba(10, 132, 255, 0.8)" }}
+                        >
+                            Open full profile
+                        </Link>
+                    </div>
                 </div>
                 <div style={{
                     position: "absolute",
@@ -174,17 +247,17 @@ export default function HomePage() {
                     left: "50%",
                     transform: "translateX(-50%)",
                     zIndex: 10,
-                    ...(!isisExpanded && {
+                    ...(!isExpanded && {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                     }),
                     gap: "8px",
-                    width: isisExpanded ? "min(800px, calc(100% - 2rem))" : "150px",
-                    height: isisExpanded ? "min(600px, calc(100% - 2rem))" : "40px",
+                    width: isExpanded ? "min(800px, calc(100% - 2rem))" : "150px",
+                    height: isExpanded ? "min(600px, calc(100% - 2rem))" : "40px",
                     transition: "width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)",
                     padding: "10px 14px",
-                    borderRadius: isisExpanded ? "15px":"12px",
+                    borderRadius: isExpanded ? "15px":"12px",
                     boxSizing: "border-box",
                     overflow: "hidden",
                     border: "1px solid rgba(255, 255, 255, 0.65)",
@@ -196,14 +269,15 @@ export default function HomePage() {
                     <button
                         type="button"
                         onClick={() => {
-                                setIsisExpanded(!isisExpanded);
+                                setisExpanded(!isExpanded);
                                 setSelectedParking(null);
+                                setIsProfileExpanded(false)
                             }
                         }
-                        aria-label={isisExpanded ? "Collapse panel" : "Expand panel"}
+                        aria-label={isExpanded ? "Collapse panel" : "Expand panel"}
                         style={{
                             position: "absolute",
-                            ...(isisExpanded ? { top: "1rem", right: "1rem" } : {}),
+                            ...(isExpanded ? { top: "1rem", right: "1rem" } : {}),
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
@@ -211,15 +285,15 @@ export default function HomePage() {
                             height: "28px",
                             border: "none",
                             borderRadius: "8px",
-                            ...(isisExpanded? {background: "rgba(118, 118, 128, 0.12)"}:{}),
+                            ...(isExpanded? {background: "rgba(118, 118, 128, 0.12)"}:{}),
                             color: "#1c1c1e",
                             fontSize: "16px",
                             lineHeight: 1,
                             cursor: "pointer",
                         }}>
-                        {isisExpanded ? "×" : <Image src={carIcon} alt="Car" width={38} height={38} />}
+                        {isExpanded ? "×" : <Image src={carIcon} alt="Car" width={38} height={38} />}
                     </button>
-                    {isisExpanded && (
+                    {isExpanded && (
                         <div style={{ display: "flex", height: "100%", minHeight: 0 }}>
                             {selectedParking ? (
                                 <div style={{ display: "flex", gap: "16px", width: "100%", height: "100%", minHeight: 0 }}>
