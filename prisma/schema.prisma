@@ -1,25 +1,62 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
 }
 
-
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String
-  bio       String?
-  image     String?
-  createdAt DateTime @default(now())
+  id              String   @id @default(cuid())
+  name            String
+  email           String   @unique
+  password        String
+  bio             String?
+  image           String?
+  carRegistration String?  @unique
+  role            String   @default("USER") // USER wla ADMIN
+  createdAt       DateTime @default(now())
 
+  reservations      Reservation[] @relation("UserReservations")
+  reservationsByCar Reservation[] @relation("ReservationCarRegistration")
+}
+
+model Parking {
+  id           String @id @default(cuid())
+  name         String
+  address      String
+  totalSpots   Int
+  pricePerHour Float
+  latitude     Float?
+  longitude    Float?
+
+  spots        Spot[]
+  reservations Reservation[]
+}
+
+model Spot {
+  id         String  @id @default(cuid())
+  spotNumber String
+  isBooked   Boolean @default(false)
+  parkingId  String
+  parking    Parking @relation(fields: [parkingId], references: [id])
+
+  reservations Reservation[]
+}
+
+model Reservation {
+  id              String   @id @default(cuid())
+  userId          String
+  parkingId       String
+  spotId          String
+  carRegistration String?
+  startTime       DateTime
+  endTime         DateTime
+  status          String   @default("PENDING") // PENDING, CONFIRMED, CANCELLED
+
+  user                User    @relation("UserReservations", fields: [userId], references: [id])
+  carRegistrationUser User?   @relation("ReservationCarRegistration", fields: [carRegistration], references: [carRegistration])
+  parking             Parking @relation(fields: [parkingId], references: [id])
+  spot                Spot    @relation(fields: [spotId], references: [id])
 }
